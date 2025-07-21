@@ -1,19 +1,21 @@
 package core.entities;
 
 import core.entities.enums.EstadoConservacao;
-// Você também vai importar seus enums de Cor e Tamanho aqui
+import core.entities.enums.Tamanho;
+import core.entities.enums.Cores;
+
 
 public abstract class Item {
 
     private Integer id;
     private String descricao;
-    private String cor; // Provisório, idealmente será um Enum Cor
-    private String tamanho; // Provisório, idealmente será um Enum Tamanho
+    private Cores cor; 
+    private Tamanho tamanho; 
     private String lojaOrigem;
     private EstadoConservacao estado; // Usando o Enum que criamos [cite: 13]
     private String caminhoFoto;
 
-    public Item(String descricao, String cor, String tamanho, String lojaOrigem, EstadoConservacao estado, String caminhoFoto) {
+    public Item(String descricao,Cores cor, Tamanho tamanho, String lojaOrigem, EstadoConservacao estado, String caminhoFoto) {
         this.descricao = descricao;
         this.cor = cor;
         this.tamanho = tamanho;
@@ -40,19 +42,19 @@ public abstract class Item {
         this.descricao = descricao;
     }
 
-    public String getCor() {
-        return cor;
+    public Cores getCor() {
+        return this.cor;
     }
 
-    public void setCor(String cor) {
+    public void setCor(Cores cor) {
         this.cor = cor;
     }
 
-    public String getTamanho() {
+    public Tamanho getTamanho() {
         return tamanho;
     }
 
-    public void setTamanho(String tamanho) {
+    public void setTamanho(Tamanho tamanho) {
         this.tamanho = tamanho;
     }
 
