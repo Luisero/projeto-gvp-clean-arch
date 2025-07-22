@@ -93,7 +93,9 @@ public class TelaListagemRoupas extends JFrame {
                 item.getTamanho().name(),
                 item.getEstado().name()
             };
+            
             modeloTabela.addRow(linha);
+            
         }
     }
 

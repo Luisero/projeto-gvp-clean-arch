@@ -6,8 +6,12 @@ import com.luis.gvp.core.entities.enums.Cores;
 import com.luis.gvp.core.entities.enums.EstadoConservacao;
 import com.luis.gvp.core.entities.enums.Tamanho;
 import com.luis.gvp.core.entities.modeloRoupas.*;
+import com.luis.gvp.core.entities.modeloRoupas.roupaInferior.Bermuda;
 import com.luis.gvp.core.entities.modeloRoupas.roupaInferior.Calca;
+import com.luis.gvp.core.entities.modeloRoupas.roupaIntima.Calcinha;
+import com.luis.gvp.core.entities.modeloRoupas.roupaIntima.Cueca;
 import com.luis.gvp.core.entities.modeloRoupas.roupaSuperior.Camisa;
+import com.luis.gvp.core.entities.modeloRoupas.roupaSuperior.Regata;
 import com.luis.gvp.core.entities.roupasCasosDeUso.cadastrarRoupaCasoDeUsoImpl;
 import com.luis.gvp.core.repositories.ItemRepository;
 import com.luis.gvp.infra.persistence.ItemRepositoryImpl;
@@ -43,7 +47,7 @@ public class TelaCadastroRoupa extends JDialog {
         // --- Campos e Labels ---
        
         painelFormulario.add(new JLabel("Tipo de Roupa:"));
-        comboTipo = new JComboBox<>(new String[]{"Camisa", "Calca"}); // Adicione outros tipos aqui
+        comboTipo = new JComboBox<>(new String[]{"Camisa", "Calca", "Regata", "Bermuda", "Calcinha","Cueca"}); // Adicione outros tipos aqui
         painelFormulario.add(comboTipo);
         
         painelFormulario.add(new JLabel("Descrição:"));
@@ -104,10 +108,22 @@ public class TelaCadastroRoupa extends JDialog {
         case "Calca":
         	novoItem = new Calca(descricao, cor, tamanho, loja, estado, "default");
             break;
+        case "Regata":
+        	novoItem = new Regata(descricao, cor, tamanho, loja, estado, "default");
+            break;
+        case "Bermuda":
+        	novoItem = new Bermuda(descricao, cor, tamanho, loja, estado, "default");
+            break;
+        case "Calcinha":
+        	novoItem = new Calcinha(descricao, cor, tamanho, loja, estado, "default");
+            break;
+        case "Cueca":
+        	novoItem = new Cueca(descricao, cor, tamanho, loja, estado, "default");
+            break;
         // Adicione um 'case' para cada tipo de roupa que você tiver
     }
 
-        // 3. Salva no banco de dados
+        
         if (novoItem != null) {
             
             cadastrarRoupaCasoDeUsoImpl cadastrarCase = new cadastrarRoupaCasoDeUsoImpl(itemRepository);

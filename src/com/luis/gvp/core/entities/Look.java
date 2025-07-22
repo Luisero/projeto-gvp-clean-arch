@@ -6,11 +6,18 @@ import com.luis.gvp.core.entities.tiposDeRoupas.RoupaIntima;
 import com.luis.gvp.core.entities.tiposDeRoupas.RoupaSuperior;
 
 public class Look {
-	private RoupaSuperior[] parteSuperior = new RoupaSuperior[2];
-	private RoupaInferior[] parteInferior = new RoupaInferior[1];
-	private RoupaIntima[] parteIntima = new RoupaIntima[2];
-	private Acessorio[] acessorios = new Acessorio[2];
+	private int idLook;
+	private RoupaSuperior parteSuperior ;
+	private RoupaInferior parteInferior;
+	private RoupaIntima parteIntima;
+	private Acessorio acessorios;
 	
-	
+	public Look(int idLook,RoupaSuperior ps1, RoupaInferior ri1, RoupaIntima rin)
+	{
+		this.parteSuperior = ps1;
+		this.parteInferior = ri1;
+		this.parteIntima = rin;
+		this.idLook = idLook;
+	}
 	
 }

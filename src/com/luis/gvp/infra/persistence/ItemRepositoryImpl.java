@@ -5,8 +5,12 @@ import com.luis.gvp.core.entities.LojaDeOrigem;
 import com.luis.gvp.core.entities.enums.Cores;
 import com.luis.gvp.core.entities.enums.EstadoConservacao;
 import com.luis.gvp.core.entities.enums.Tamanho;
+import com.luis.gvp.core.entities.modeloRoupas.roupaInferior.Bermuda;
 import com.luis.gvp.core.entities.modeloRoupas.roupaInferior.Calca;
+import com.luis.gvp.core.entities.modeloRoupas.roupaIntima.Calcinha;
+import com.luis.gvp.core.entities.modeloRoupas.roupaIntima.Cueca;
 import com.luis.gvp.core.entities.modeloRoupas.roupaSuperior.Camisa;
+import com.luis.gvp.core.entities.modeloRoupas.roupaSuperior.Regata;
 import com.luis.gvp.core.repositories.ItemRepository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -94,6 +98,18 @@ public class ItemRepositoryImpl implements ItemRepository {
                 break;
             case "Calca":
             	item = new Calca(descricao, cor, tamanho, lojaOrigem, estado, caminhoFoto);
+                break;
+            case "Regata":
+            	item = new Regata(descricao, cor, tamanho, lojaOrigem, estado, "default");
+                break;
+            case "Bermuda":
+            	item = new Bermuda(descricao, cor, tamanho, lojaOrigem, estado, "default");
+                break;
+            case "Cueca":
+            	item = new Cueca(descricao, cor, tamanho, lojaOrigem, estado, "default");
+                break;
+            case "Calcinha":
+            	item = new Calcinha(descricao, cor, tamanho, lojaOrigem, estado, "default");
                 break;
             // Adicione um 'case' para cada tipo de roupa que você tiver
         }
