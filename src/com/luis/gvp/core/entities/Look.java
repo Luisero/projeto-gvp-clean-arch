@@ -12,7 +12,7 @@ public class Look {
     private RoupaIntima parteIntima;
     private Acessorio acessorios;
 
-    public Look(int idLook, RoupaSuperior ps1, RoupaInferior ri1, RoupaIntima rin) {
+    public Look(int idLook, RoupaSuperior ps1, RoupaInferior ri1, RoupaIntima rin, Acessorio asse) {
         if (ps1 == null || ri1 == null || rin == null) {
             throw new IllegalArgumentException("Todas as partes do look são obrigatórias.");
         }
@@ -20,6 +20,7 @@ public class Look {
         this.parteSuperior = ps1;
         this.parteInferior = ri1;
         this.parteIntima = rin;
+        this.acessorios = asse;
     }
 
     public void setAcessorio(Acessorio acessorios) {

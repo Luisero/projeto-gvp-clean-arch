@@ -42,10 +42,12 @@ public class TelaListagemRoupas extends JFrame {
         JPanel painelBotoes = new JPanel();
         JButton botaoCadastrar = new JButton("Cadastrar Nova Roupa");
         JButton botaoAtualizar = new JButton("Atualizar Lista");
-        
+        JButton botaoExcluir = new JButton("Excluir Roupa Selecionada");
+
         painelBotoes.add(botaoCadastrar);
         painelBotoes.add(botaoAtualizar);
-        
+        painelBotoes.add(botaoExcluir);
+
         painelPrincipal.add(painelBotoes, BorderLayout.SOUTH);
 
         // --- Adiciona o painel principal à janela ---
@@ -67,6 +69,29 @@ public class TelaListagemRoupas extends JFrame {
                 carregarDadosNaTabela();
             }
         });
+        
+        botaoExcluir.addActionListener(e -> {
+            int linhaSelecionada = tabelaRoupas.getSelectedRow();
+            if (linhaSelecionada == -1) {
+                JOptionPane.showMessageDialog(this, "Selecione uma roupa para excluir.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Pega o ID da roupa na primeira coluna da linha selecionada
+            int idRoupa = (int) modeloTabela.getValueAt(linhaSelecionada, 0);
+            String descricaoRoupa = (String) modeloTabela.getValueAt(linhaSelecionada, 1);
+
+            int confirmacao = JOptionPane.showConfirmDialog(this,
+                    "Tem certeza que deseja excluir a roupa: " + descricaoRoupa + "?",
+                    "Confirmar Exclusão",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (confirmacao == JOptionPane.YES_OPTION) {
+                itemRepository.deletar(idRoupa);
+                carregarDadosNaTabela(); // Atualiza a tabela
+            }
+        });
+
 
         // --- Carrega os dados iniciais na tabela ---
         carregarDadosNaTabela();
