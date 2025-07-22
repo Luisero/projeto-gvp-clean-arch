@@ -83,6 +83,10 @@ public abstract class Item {
         this.caminhoFoto = caminhoFoto;
     }
     
+    public String getNomeLojaOrigem()
+    {
+    	return this.lojaOrigem.getNome();
+    }
     
     public boolean podeEmprestar()
     {
