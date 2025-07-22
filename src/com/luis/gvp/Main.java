@@ -1,29 +1,55 @@
 package com.luis.gvp;
 
-import java.lang.annotation.Target;
-import java.util.List;
-
-import com.luis.gvp.core.entities.Item;
-import com.luis.gvp.core.entities.LojaDeOrigem;
-import com.luis.gvp.core.entities.enums.Cores;
-import com.luis.gvp.core.entities.enums.EstadoConservacao;
-import com.luis.gvp.core.entities.enums.Tamanho;
-import com.luis.gvp.core.entities.modeloRoupas.roupaSuperior.Camisa;
+import com.luis.gvp.core.entities.Look;
+import com.luis.gvp.core.entities.tiposDeRoupas.Acessorio;
+import com.luis.gvp.core.entities.tiposDeRoupas.RoupaInferior;
+import com.luis.gvp.core.entities.tiposDeRoupas.RoupaIntima;
+import com.luis.gvp.core.entities.tiposDeRoupas.RoupaSuperior;
 import com.luis.gvp.core.repositories.ItemRepository;
+import com.luis.gvp.core.repositories.LookRepository;
 import com.luis.gvp.infra.persistence.ItemRepositoryImpl;
+import com.luis.gvp.infra.persistence.LookRepositoryImpl;
 
-
-//Lembre-se desta classe?
 public class Main {
- public static void main(String[] args) {
-     System.out.println("Iniciando teste de salvamento...");
+    public static void main(String[] args) {
+        // Inicializa os repositórios
+        ItemRepository itemRepo = new ItemRepositoryImpl();
+        LookRepository lookRepo = new LookRepositoryImpl(itemRepo);
 
-     Camisa camisaTeste = new Camisa("Camisa de Algodão Branca", Cores.BRANCO, Tamanho.M, new LojaDeOrigem("C&A"), EstadoConservacao.BOM,"fd");
+        // --- ETAPA 1: Buscar ou criar peças de roupa já existentes ---
+        // IMPORTANTE: você precisa garantir que esses IDs existem na TB_ITEM!
+        RoupaSuperior camisa = (RoupaSuperior) itemRepo.buscarPorId(4);
+        RoupaInferior calca = (RoupaInferior) itemRepo.buscarPorId(8);
+        RoupaIntima cueca = (RoupaIntima) itemRepo.buscarPorId(12);
+        //Acessorio cinto = (Acessorio) itemRepo.buscarPorId(4);
 
-     ItemRepository repositorio = new ItemRepositoryImpl();
-     // Esta linha vai inserir o item no banco de dados.
-     repositorio.salvar(camisaTeste); 
+        if (camisa == null || calca == null || cueca == null) {
+            System.out.println("ERRO: Verifique se os IDs 1, 2 e 3 existem na tabela TB_ITEM.");
+            return;
+        }
 
-     System.out.println("Teste finalizado.");
- }
+        // --- ETAPA 2: Criar o Look ---
+        Look look = new Look(0, camisa, calca, cueca, null); // O ID será atribuído pelo banco (autoincrement)
+        //look.setAcessorio(cinto); // Pode ser null se quiser testar sem acessório
+
+        // --- ETAPA 3: Salvar o Look no banco ---
+        lookRepo.salvar(look);
+
+        // --- ETAPA 4: Buscar um Look e exibir ---
+        Look lookBuscado = lookRepo.buscarPorId(1); // Verifique o ID real inserido (pode variar)
+        if (lookBuscado != null) {
+            System.out.println("Look #" + lookBuscado.getIdLook() + ":");
+            System.out.println("Superior: " + lookBuscado.getParteSuperior().getDescricao());
+            System.out.println("Inferior: " + lookBuscado.getParteInferior().getDescricao());
+            System.out.println("Íntima: " + lookBuscado.getParteIntima().getDescricao());
+            System.out.println("Acessório: " +
+                (lookBuscado.getAcessorio() != null ? lookBuscado.getAcessorio().getDescricao() : "Nenhum"));
+        } else {
+            System.out.println("Nenhum look encontrado com ID 1.");
+        }
+
+        // --- ETAPA 5: Teste de exclusão (opcional) ---
+        // lookRepo.deletar(1);
+        // System.out.println("Look excluído com sucesso.");
+    }
 }

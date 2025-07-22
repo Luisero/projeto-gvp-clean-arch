@@ -93,4 +93,10 @@ public abstract class Item {
     	return this.podeEmprestar;
     }
     
+    @Override
+    public String toString()
+    {
+    	return this.descricao;
+    }
+    
 }

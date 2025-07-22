@@ -10,127 +10,104 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+//... (importações permanecem as mesmas)
 
 public class TelaListagemRoupas extends JFrame {
 
-    private JTable tabelaRoupas;
-    private DefaultTableModel modeloTabela;
-    private ItemRepository itemRepository;
+ private JTable tabelaRoupas;
+ private DefaultTableModel modeloTabela;
+ private ItemRepository itemRepository;
 
-    public TelaListagemRoupas() {
-        // --- Configurações básicas da janela ---
-        setTitle("Gestor de Vestuário - Minhas Roupas");
-        setSize(800, 600);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // Centraliza na tela
+ public TelaListagemRoupas() {
+     setTitle("Gestor de Vestuário - Minhas Roupas");
+     setSize(800, 600);
+     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Mudei para não fechar o app inteiro
+     setLocationRelativeTo(null);
 
-        this.itemRepository = new ItemRepositoryImpl();
+     this.itemRepository = new ItemRepositoryImpl();
 
-        // --- Painel principal com layout ---
-        JPanel painelPrincipal = new JPanel(new BorderLayout());
+     JPanel painelPrincipal = new JPanel(new BorderLayout());
 
-        // --- Tabela para listar as roupas ---
-        String[] colunas = {"ID", "Descrição", "Tipo", "Cor", "Tamanho", "Estado"};
-        modeloTabela = new DefaultTableModel(colunas, 0); // 0 linhas iniciais
-        tabelaRoupas = new JTable(modeloTabela);
-        
-        // Adiciona a tabela a um painel com rolagem
-        JScrollPane painelTabela = new JScrollPane(tabelaRoupas);
-        painelPrincipal.add(painelTabela, BorderLayout.CENTER);
+     String[] colunas = {"ID", "Descrição", "Tipo", "Cor", "Tamanho", "Estado"};
+     modeloTabela = new DefaultTableModel(colunas, 0);
+     tabelaRoupas = new JTable(modeloTabela);
 
-        // --- Botões de Ação ---
-        JPanel painelBotoes = new JPanel();
-        JButton botaoCadastrar = new JButton("Cadastrar Nova Roupa");
-        JButton botaoAtualizar = new JButton("Atualizar Lista");
-        JButton botaoExcluir = new JButton("Excluir Roupa Selecionada");
+     JScrollPane painelTabela = new JScrollPane(tabelaRoupas);
+     painelPrincipal.add(painelTabela, BorderLayout.CENTER);
 
-        painelBotoes.add(botaoCadastrar);
-        painelBotoes.add(botaoAtualizar);
-        painelBotoes.add(botaoExcluir);
+     JPanel painelBotoes = new JPanel();
 
-        painelPrincipal.add(painelBotoes, BorderLayout.SOUTH);
+     JButton botaoCadastrar = new JButton("Cadastrar Nova Roupa");
+     JButton botaoAtualizar = new JButton("Atualizar Lista");
+     JButton botaoExcluir = new JButton("Excluir Roupa Selecionada");
+     JButton botaoVoltar = new JButton("Voltar à Tela Inicial"); // <- Novo botão
 
-        // --- Adiciona o painel principal à janela ---
-        add(painelPrincipal);
+     painelBotoes.add(botaoCadastrar);
+     painelBotoes.add(botaoAtualizar);
+     painelBotoes.add(botaoExcluir);
+     painelBotoes.add(botaoVoltar); // <- Adicionado ao painel
 
-        // --- Ações dos Botões (Action Listeners) ---
-        botaoAtualizar.addActionListener(e -> carregarDadosNaTabela());
+     painelPrincipal.add(painelBotoes, BorderLayout.SOUTH);
+     add(painelPrincipal);
 
+     botaoAtualizar.addActionListener(e -> carregarDadosNaTabela());
 
-        botaoCadastrar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Cria e exibe a tela de cadastro como um pop-up
-                TelaCadastroRoupa telaCadastro = new TelaCadastroRoupa(TelaListagemRoupas.this);
-                telaCadastro.setVisible(true);
+     botaoCadastrar.addActionListener(e -> {
+         TelaCadastroRoupa telaCadastro = new TelaCadastroRoupa(TelaListagemRoupas.this);
+         telaCadastro.setVisible(true);
+         carregarDadosNaTabela();
+     });
 
-                // IMPORTANTE: Depois que a tela de cadastro fechar,
-                // o código continua daqui. Então, atualizamos a tabela!
-                carregarDadosNaTabela();
-            }
-        });
-        
-        botaoExcluir.addActionListener(e -> {
-            int linhaSelecionada = tabelaRoupas.getSelectedRow();
-            if (linhaSelecionada == -1) {
-                JOptionPane.showMessageDialog(this, "Selecione uma roupa para excluir.", "Aviso", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
+     botaoExcluir.addActionListener(e -> {
+         int linhaSelecionada = tabelaRoupas.getSelectedRow();
+         if (linhaSelecionada == -1) {
+             JOptionPane.showMessageDialog(this, "Selecione uma roupa para excluir.", "Aviso", JOptionPane.WARNING_MESSAGE);
+             return;
+         }
 
-            // Pega o ID da roupa na primeira coluna da linha selecionada
-            int idRoupa = (int) modeloTabela.getValueAt(linhaSelecionada, 0);
-            String descricaoRoupa = (String) modeloTabela.getValueAt(linhaSelecionada, 1);
+         int idRoupa = (int) modeloTabela.getValueAt(linhaSelecionada, 0);
+         String descricaoRoupa = (String) modeloTabela.getValueAt(linhaSelecionada, 1);
 
-            int confirmacao = JOptionPane.showConfirmDialog(this,
-                    "Tem certeza que deseja excluir a roupa: " + descricaoRoupa + "?",
-                    "Confirmar Exclusão",
-                    JOptionPane.YES_NO_OPTION);
+         int confirmacao = JOptionPane.showConfirmDialog(this,
+                 "Tem certeza que deseja excluir a roupa: " + descricaoRoupa + "?",
+                 "Confirmar Exclusão",
+                 JOptionPane.YES_NO_OPTION);
 
-            if (confirmacao == JOptionPane.YES_OPTION) {
-                itemRepository.deletar(idRoupa);
-                carregarDadosNaTabela(); // Atualiza a tabela
-            }
-        });
+         if (confirmacao == JOptionPane.YES_OPTION) {
+             itemRepository.deletar(idRoupa);
+             carregarDadosNaTabela();
+         }
+     });
 
+     // --- NOVA AÇÃO do botão Voltar ---
+     botaoVoltar.addActionListener(e -> {
+         this.dispose(); // Fecha esta janela
+         new TelaInicial().setVisible(true); // Abre a tela inicial
+     });
 
-        // --- Carrega os dados iniciais na tabela ---
-        carregarDadosNaTabela();
-    }
+     carregarDadosNaTabela();
+ }
 
-    /**
-     * Busca os dados do repositório e os exibe na JTable.
-     * Esta função é essencial para a parte de "visualizar itens"[cite: 19].
-     */
-    private void carregarDadosNaTabela() {
-        modeloTabela.setRowCount(0);
-        List<Item> itens = this.itemRepository.listarTodos();
-        
-        // --- ADICIONE ESTA LINHA DE DEBUG ---
-        System.out.println("DEBUG: O método listarTodos() encontrou " + itens.size() + " itens no banco.");
-        // ------------------------------------
+ private void carregarDadosNaTabela() {
+     modeloTabela.setRowCount(0);
+     List<Item> itens = this.itemRepository.listarTodos();
 
-        for (Item item : itens) {
-            Object[] linha = {
-                item.getId(),
-                item.getDescricao(),
-                item.getClass().getSimpleName(),
-                item.getCor().name(),
-                item.getTamanho().name(),
-                item.getEstado().name()
-            };
-            
-            modeloTabela.addRow(linha);
-            
-        }
-    }
+     System.out.println("DEBUG: O método listarTodos() encontrou " + itens.size() + " itens no banco.");
 
-    public static void main(String[] args) {
-        // Garante que a UI seja executada na thread de eventos do Swing
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new TelaListagemRoupas().setVisible(true);
-            }
-        });
-    }
+     for (Item item : itens) {
+         Object[] linha = {
+             item.getId(),
+             item.getDescricao(),
+             item.getClass().getSimpleName(),
+             item.getCor().name(),
+             item.getTamanho().name(),
+             item.getEstado().name()
+         };
+         modeloTabela.addRow(linha);
+     }
+ }
+
+ public static void main(String[] args) {
+     SwingUtilities.invokeLater(() -> new TelaListagemRoupas().setVisible(true));
+ }
 }

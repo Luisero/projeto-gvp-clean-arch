@@ -10,63 +10,82 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
+//... imports existentes ...
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class TelaListagemLooks extends JFrame {
 
-    private JTable tabelaLooks;
-    private DefaultTableModel modeloTabela;
-    private LookRepository lookRepository;
+ private JTable tabelaLooks;
+ private DefaultTableModel modeloTabela;
+ private LookRepository lookRepository;
+ private ItemRepository itemRepository;
 
-    public TelaListagemLooks() {
-        setTitle("Gestor de Vestuário - Meus Looks");
-        setSize(900, 500);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Não fecha o app inteiro
-        setLocationRelativeTo(null);
+ public TelaListagemLooks() {
+     setTitle("Gestor de Vestuário - Meus Looks");
+     setSize(900, 500);
+     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+     setLocationRelativeTo(null);
 
-        ItemRepository itemRepository = new ItemRepositoryImpl(); // Necessário para LookRepo
-        this.lookRepository = new LookRepositoryImpl(itemRepository);
+     itemRepository = new ItemRepositoryImpl();
+     this.lookRepository = new LookRepositoryImpl(itemRepository);
 
-        JPanel painelPrincipal = new JPanel(new BorderLayout());
+     JPanel painelPrincipal = new JPanel(new BorderLayout());
 
-        String[] colunas = {"ID", "Parte Superior", "Parte Inferior", "Parte Íntima", "Acessório"};
-        modeloTabela = new DefaultTableModel(colunas, 0);
-        tabelaLooks = new JTable(modeloTabela);
+     String[] colunas = {"ID", "Parte Superior", "Parte Inferior", "Parte Íntima", "Acessório"};
+     modeloTabela = new DefaultTableModel(colunas, 0);
+     tabelaLooks = new JTable(modeloTabela);
+     JScrollPane painelTabela = new JScrollPane(tabelaLooks);
+     painelPrincipal.add(painelTabela, BorderLayout.CENTER);
 
-        JScrollPane painelTabela = new JScrollPane(tabelaLooks);
-        painelPrincipal.add(painelTabela, BorderLayout.CENTER);
+     // --- Painel de Botões ---
+     JPanel painelBotoes = new JPanel();
 
-        JButton botaoAtualizar = new JButton("Atualizar Lista");
-        botaoAtualizar.addActionListener(e -> carregarLooksNaTabela());
+     JButton botaoAtualizar = new JButton("Atualizar Lista");
+     JButton botaoNovoLook = new JButton("Criar Novo Look");
+     JButton botaoVoltar = new JButton("Voltar à Tela Inicial");
 
-        JPanel painelBotoes = new JPanel();
-        painelBotoes.add(botaoAtualizar);
-        painelPrincipal.add(painelBotoes, BorderLayout.SOUTH);
+     painelBotoes.add(botaoNovoLook);
+     painelBotoes.add(botaoAtualizar);
+     painelBotoes.add(botaoVoltar);
+     painelPrincipal.add(painelBotoes, BorderLayout.SOUTH);
 
-        add(painelPrincipal);
+     add(painelPrincipal);
 
-        carregarLooksNaTabela();
-    }
+     // --- Ações ---
+     botaoAtualizar.addActionListener(e -> carregarLooksNaTabela());
 
-    private void carregarLooksNaTabela() {
-        modeloTabela.setRowCount(0);
+     botaoNovoLook.addActionListener(new ActionListener() {
+         @Override
+         public void actionPerformed(ActionEvent e) {
+             TelaCadastroLook telaCadastro = new TelaCadastroLook(TelaListagemLooks.this);
+             telaCadastro.setVisible(true);  // Bloqueia até fechar
+             carregarLooksNaTabela(); // Atualiza após possível inserção
+         }
+     });
 
-        // Supondo que você ainda não tenha "listarTodos" no LookRepository
-        // Aqui seria ideal se tivesse esse método, mas por enquanto, podemos simular manualmente
-        for (int id = 1; id < 1000; id++) {
-            Look look = lookRepository.buscarPorId(id);
-            if (look == null) continue;
+     botaoVoltar.addActionListener(e -> {
+         dispose(); // Fecha essa tela
+         new TelaInicial().setVisible(true); // Abre tela inicial
+     });
 
-            modeloTabela.addRow(new Object[]{
-                    look.getIdLook(),
-                    look.getParteSuperior().getDescricao(),
-                    look.getParteInferior().getDescricao(),
-                    look.getParteIntima().getDescricao(),
-                    look.getAcessorio() != null ? look.getAcessorio().getDescricao() : "Nenhum"
-            });
-        }
-    }
+     carregarLooksNaTabela();
+ }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new TelaListagemLooks().setVisible(true));
-    }
+ private void carregarLooksNaTabela() {
+     modeloTabela.setRowCount(0);
+
+     for (int id = 1; id < 1000; id++) {
+         Look look = lookRepository.buscarPorId(id);
+         if (look == null) continue;
+
+         modeloTabela.addRow(new Object[]{
+                 look.getIdLook(),
+                 look.getParteSuperior().getDescricao(),
+                 look.getParteInferior().getDescricao(),
+                 look.getParteIntima().getDescricao(),
+                 look.getAcessorio() != null ? look.getAcessorio().getDescricao() : "Nenhum"
+         });
+     }
+ }
 }
