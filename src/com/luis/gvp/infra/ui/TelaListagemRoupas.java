@@ -54,12 +54,17 @@ public class TelaListagemRoupas extends JFrame {
         // --- Ações dos Botões (Action Listeners) ---
         botaoAtualizar.addActionListener(e -> carregarDadosNaTabela());
 
+
         botaoCadastrar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Ação para abrir a tela de cadastro
-                // Por enquanto, apenas uma mensagem
-                JOptionPane.showMessageDialog(null, "A tela de cadastro será aberta aqui!");
+                // Cria e exibe a tela de cadastro como um pop-up
+                TelaCadastroRoupa telaCadastro = new TelaCadastroRoupa(TelaListagemRoupas.this);
+                telaCadastro.setVisible(true);
+
+                // IMPORTANTE: Depois que a tela de cadastro fechar,
+                // o código continua daqui. Então, atualizamos a tabela!
+                carregarDadosNaTabela();
             }
         });
 
