@@ -6,6 +6,7 @@ import com.luis.gvp.core.entities.enums.Cores;
 import com.luis.gvp.core.entities.enums.EstadoConservacao;
 import com.luis.gvp.core.entities.enums.Tamanho;
 import com.luis.gvp.core.entities.modeloRoupas.*;
+import com.luis.gvp.core.entities.modeloRoupas.acessorios.Relogio;
 import com.luis.gvp.core.entities.modeloRoupas.roupaInferior.Bermuda;
 import com.luis.gvp.core.entities.modeloRoupas.roupaInferior.Calca;
 import com.luis.gvp.core.entities.modeloRoupas.roupaIntima.Calcinha;
@@ -47,7 +48,7 @@ public class TelaCadastroRoupa extends JDialog {
         // --- Campos e Labels ---
        
         painelFormulario.add(new JLabel("Tipo de Roupa:"));
-        comboTipo = new JComboBox<>(new String[]{"Camisa", "Calca", "Regata", "Bermuda", "Calcinha","Cueca"}); // Adicione outros tipos aqui
+        comboTipo = new JComboBox<>(new String[]{"Camisa", "Calca", "Regata", "Bermuda", "Calcinha","Cueca","Relogio"}); // Adicione outros tipos aqui
         painelFormulario.add(comboTipo);
         
         painelFormulario.add(new JLabel("Descrição:"));
@@ -119,6 +120,9 @@ public class TelaCadastroRoupa extends JDialog {
             break;
         case "Cueca":
         	novoItem = new Cueca(descricao, cor, tamanho, loja, estado, "default");
+            break;
+        case "Relogio":
+        	novoItem = new Relogio(descricao, cor, tamanho, loja, estado, "default");
             break;
         // Adicione um 'case' para cada tipo de roupa que você tiver
     }

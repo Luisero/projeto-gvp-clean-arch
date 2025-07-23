@@ -5,6 +5,7 @@ import com.luis.gvp.core.entities.LojaDeOrigem;
 import com.luis.gvp.core.entities.enums.Cores;
 import com.luis.gvp.core.entities.enums.EstadoConservacao;
 import com.luis.gvp.core.entities.enums.Tamanho;
+import com.luis.gvp.core.entities.modeloRoupas.acessorios.Relogio;
 import com.luis.gvp.core.entities.modeloRoupas.roupaInferior.Bermuda;
 import com.luis.gvp.core.entities.modeloRoupas.roupaInferior.Calca;
 import com.luis.gvp.core.entities.modeloRoupas.roupaIntima.Calcinha;
@@ -110,6 +111,9 @@ public class ItemRepositoryImpl implements ItemRepository {
                 break;
             case "Calcinha":
             	item = new Calcinha(descricao, cor, tamanho, lojaOrigem, estado, "default");
+                break;
+            case "Relogio":
+            	item = new Relogio(descricao, cor, tamanho, lojaOrigem, estado, "default");
                 break;
             // Adicione um 'case' para cada tipo de roupa que você tiver
         }
